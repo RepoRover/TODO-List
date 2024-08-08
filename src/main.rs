@@ -1,9 +1,6 @@
-use std::{
-    io::{self, Error},
-    process,
-};
+use std::io;
 
-use todo_list_lib::{self, handle_input};
+use todo_list_lib::validate_input;
 
 fn main() {
     start();
@@ -16,7 +13,16 @@ and initiates the program execution process
 fn start() {
     // TODO: return all the existing TODOs before handling any inputs
 
+    // For each incoming input line run the app
     for input in io::stdin().lines() {
-        handle_input(input);
+        match validate_input(&input) {
+            Ok(c) => c.handle(),
+            Err(e) => {
+                // TODO: use custom error handling when developed
+
+                eprintln!("{}", e);
+                continue;
+            }
+        };
     }
 }

@@ -1,22 +1,17 @@
-use std::{io::Error, process};
-
+pub mod list;
 mod tests;
 
-pub fn handle_input(input: Result<String, Error>) {
-    let value: String = validate_input(input);
+use std::io;
 
-    // match value.as_str() {
-    //     "exit" => process::exit(1),
-    //     _ => println!("Unrecognized command"),
-    // }
-}
+use list::Command;
 
 /*
-Takes ownership of the passed in 'input' and returns trimmed lowercase value
+Takes entered input, converts it to Command enum and returns the command
 */
-fn validate_input(input: Result<String, Error>) -> String {
+// TODO: implemet test
+pub fn validate_input(input: &Result<String, io::Error>) -> Result<Command, String> {
     match input {
-        Ok(v) => v.trim().to_lowercase(),
-        Err(_) => process::exit(1),
+        Ok(value) => value.parse::<Command>(),
+        Err(_) => Err(String::from("Invalid input")),
     }
 }
