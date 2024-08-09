@@ -24,6 +24,7 @@ Converts &str into "Command" enumeration
 impl FromStr for Command {
     type Err = String;
 
+    // TODO: implemet test
     fn from_str(s: &str) -> Result<Command, Self::Err> {
         match s.to_lowercase().trim() {
             "exit" => Ok(Command::Exit),

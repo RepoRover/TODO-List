@@ -7,7 +7,7 @@ fn main() {
 }
 
 /*
-`start` function returns a list of already existing TODOs
+Function returns a list of already existing TODOs
 and initiates the program execution process
 */
 fn start() {

@@ -1,32 +1,32 @@
-// #[cfg(tests)]
-// use super::*;
-// use crate::{list::Command, validate_input};
+// Use 'pub' just to get rid of the: "unused import:" warning message
+pub use super::*;
+pub use crate::{list::Command, validate_input};
 
-// #[test]
-// fn validate_commands_and_case_sensetivity() {
-//     let exit_command_input: &Result<String, _> = &Ok("ExIt".to_string());
-//     let exit_command = Command::Exit;
+#[test]
+fn validated_input_success() {
+    // Simulate successful commands with mock inputs
+    let exit_command_input: &Result<String, _> = &Ok("exit".to_string());
+    let exit_command_expected: Command = Command::Exit;
 
-//     assert_eq!(
-//         exit_command,
-//         validate_input(exit_command_input).unwrap(),
-//         "Comparing '{:?}' with '{:?}'",
-//         exit_command,
-//         exit_command_input
-//     );
-// }
+    // Pass mock inputs to the validate_input function
+    let exit_command_result: Command = validate_input(exit_command_input).unwrap();
 
-// #[test]
-// fn pass_invalid_command_as_input() {
-//     let invalid_command: &Result<String, _> = &Ok("invalid".to_string());
-//     let expected_result: Result<_, String> =
-//         Err(String::from("/-----\n\nUnrecognized command\n\n\\-----\n"));
+    assert_eq!(
+        exit_command_result, exit_command_expected,
+        "Comparing '{:?}' with '{:?}'",
+        exit_command_expected, exit_command_input
+    );
+}
 
-//     assert_eq!(
-//         expected_result,
-//         validate_input(invalid_command),
-//         "Comparing '{:?}' with '{:?}'",
-//         invalid_command,
-//         expected_result
-//     );
-// }
+#[test]
+fn validated_input_fail() {
+    // Simulate an error case by creating an Err variant
+    let invalid_input: Result<_, io::Error> =
+        Err(std::io::Error::new(std::io::ErrorKind::Other, "mock error"));
+
+    // Call the validate_input function with the simulated error
+    let result: Result<_, String> = validate_input(&invalid_input);
+    let expected_result: Result<_, String> = Err(String::from("Invalid input"));
+
+    assert_eq!(result, expected_result);
+}
