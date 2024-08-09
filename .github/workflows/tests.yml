@@ -9,8 +9,9 @@ on:
       - main
 
 jobs:
-  run_application_tests:
+  test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
@@ -21,9 +22,6 @@ jobs:
         with:
           toolchain: stable
           override: true
-
-      - name: Run cargo test
-        run: cargo test --all
 
       - name: Cache cargo registry
         uses: actions/cache@v3
@@ -48,3 +46,6 @@ jobs:
           key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-build-
+
+      - name: Run cargo test
+        run: cargo test --all
