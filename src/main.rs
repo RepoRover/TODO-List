@@ -18,9 +18,9 @@ fn start() {
         match validate_input(&input) {
             Ok(c) => c.handle(),
             Err(e) => {
-                // TODO: use custom error handling when developed
+                // TODO: log an incoming error here
 
-                eprintln!("{}", e);
+                eprintln!("{:?}", e);
                 continue;
             }
         };

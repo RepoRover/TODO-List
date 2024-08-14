@@ -1,6 +1,10 @@
 #[cfg(test)]
 mod tests {
-    use crate::{list::Command, validate_input};
+    use crate::{
+        error_handling::error::{AppError, AppErrorCodes},
+        list::Command,
+        validate_input,
+    };
     use std::io;
 
     #[test]
@@ -26,8 +30,8 @@ mod tests {
             Err(std::io::Error::new(std::io::ErrorKind::Other, "mock error"));
 
         // Call the validate_input function with the simulated error
-        let result: Result<_, String> = validate_input(&invalid_input);
-        let expected_result: Result<_, String> = Err(String::from("Invalid input"));
+        let result: Result<_, AppError> = validate_input(&invalid_input);
+        let expected_result: Result<_, AppError> = Err(AppError::new(AppErrorCodes::E1001, None));
 
         assert_eq!(result, expected_result);
     }
@@ -46,9 +50,8 @@ mod tests {
     fn fromstr_trait_impl_for_command_fail() {
         let unrecognized_command: &str = "";
 
-        let result: Result<_, String> = unrecognized_command.parse::<Command>();
-        let expected_result: Result<_, String> =
-            Err(String::from("/-----\n\nUnrecognized command\n\n\\-----\n"));
+        let result: Result<_, AppError> = unrecognized_command.parse::<Command>();
+        let expected_result: Result<_, AppError> = Err(AppError::new(AppErrorCodes::E1002, None));
 
         assert_eq!(result, expected_result);
     }

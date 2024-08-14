@@ -1,5 +1,7 @@
 use std::{fmt::Debug, process, str::FromStr};
 
+use crate::error_handling::error::{AppError, AppErrorCodes};
+
 #[derive(PartialEq)]
 pub enum Command {
     Exit,
@@ -16,7 +18,7 @@ impl Command {
     // NOTE: no tests written
     fn exit_app() {
         println!("Exiting the application");
-        process::exit(1);
+        process::exit(0);
     }
 }
 
@@ -24,17 +26,12 @@ impl Command {
 Converts &str into "Command" enumeration
 */
 impl FromStr for Command {
-    type Err = String;
+    type Err = AppError<'static>; // NOTE: Can use static here ONLY if from_str method returns AppError with original_error as None!
 
     fn from_str(s: &str) -> Result<Command, Self::Err> {
         match s.to_lowercase().trim() {
             "exit" => Ok(Command::Exit),
-            _ => {
-                // TODO: use custom error handling when developed
-                // unrecognized command etc.
-
-                Err(String::from("/-----\n\nUnrecognized command\n\n\\-----\n"))
-            }
+            _ => Err(AppError::new(AppErrorCodes::E1002, None)),
         }
     }
 }
